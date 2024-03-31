@@ -5,7 +5,7 @@ const ollama = new Ollama({host:"host.docker.internal"});
 // const ollama = new Ollama({host:"192.168.199.246"});
 // const prompt = "Describe this image in one sentence.";
 const prompt = "Answer with 'YES' or 'NO' if an animal is present in the image.";
-const image = await imgb64("./image1.png");
+const image = await imgb64("./image0.png");
 
 const output = await ollama.generate({
   prompt: prompt,
