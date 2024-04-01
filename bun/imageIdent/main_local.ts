@@ -7,6 +7,7 @@ const ollama = new Ollama({host:"host.docker.internal"});
 const prompt = "Answer with 'YES' or 'NO' if an animal is present in the image.";
 const image = await imgb64("./image0.png");
 
+console.log("Checkging if the image with the fly has an animal...");
 const output = await ollama.generate({
   prompt: prompt,
   model: "llava",
