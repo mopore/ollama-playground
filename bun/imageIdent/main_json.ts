@@ -2,6 +2,9 @@ import {Ollama} from 'ollama';
 import imgb64 from 'image-to-base64';
 
 const MAC_STUDIO_IP = "192.168.199.246" as const;
+const LOCALHOST = "host.docker.internal" as const;
+
+const SELECTED_HOST = LOCALHOST;
 
 const VERDICT_SCHEMA = {
   verdictResult: {
@@ -17,7 +20,7 @@ type Verdict = {
 
 
 const checkImageForAnimalAsync = async (imagePath: string): Promise<string> => {
-  const ollama = new Ollama({host:MAC_STUDIO_IP});
+  const ollama = new Ollama({host:SELECTED_HOST});
   const prompt = "Answer with 'YES' or 'NO' if an animal displayed in the image.";
   const image = await imgb64(imagePath);
 
@@ -35,7 +38,7 @@ const checkImageForAnimalAsync = async (imagePath: string): Promise<string> => {
 
 
 const verdictAsync = async (text: string): Promise<boolean> => {
-  const ollama = new Ollama({host:MAC_STUDIO_IP});
+  const ollama = new Ollama({host:SELECTED_HOST});
   const output = await ollama.chat({
     // model: "llama2:70b",
     model: "llama2",
