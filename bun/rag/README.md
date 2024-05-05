@@ -58,4 +58,4 @@ Also since we do not reuse the storage I removed the volume entry.
 - Run the chroma database as described above.
 - Install the bun dependencies: `bun install`
 - Feed the database with `bun feed.ts`
-- Run the search example with `bun searct.ts`
+- Run the search example with `bun search.ts`

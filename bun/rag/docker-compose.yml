@@ -2,6 +2,7 @@ version: '3.9'
 
 services:
   server:
+    container_name: chromadb-server
     image: chromadb/chroma
     # If you want to persist your data make a local volume mount
     # volumes:
