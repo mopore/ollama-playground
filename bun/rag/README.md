@@ -65,6 +65,7 @@ alias bun="docker run --name "bun-temp-runner" --interactive --tty --rm -v $(pwd
 ```
 
 To make `host.docker.internal` available you need explicitly set a host entry.
+
 Linux:
 ```bash
 alias bun="docker run --add-host=host.docker.internal:172.17.0.1 --name "bun-temp-runner" --interactive --tty --rm -v $(pwd):/app -w /app oven/bun bun"
