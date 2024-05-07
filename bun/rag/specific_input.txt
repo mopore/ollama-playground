@@ -5,6 +5,7 @@ E X A M P L E   T E X T
 Jens Nixdorf is a 44 years old manager at PRODYNA (Schweiz) AG.
 He has a background as a software developer and architect and started
 working at First Data near Frankfurt in the year 2000.
-He went to school in Burghaun,Hünfeld and Fulda and learned programming
-at the Siemens in Paderborn.
+He went to school in Burghaun for the first years.
+After that he moved to Hünfeld and later to Fulda. He learned programming
+at the company Siemens AG in Paderborn.
 He lived for several years in Frankfurt and moved to Basel in 2015.

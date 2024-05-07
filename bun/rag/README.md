@@ -53,6 +53,23 @@ I needed to change the network entry and define the image "chromadb/chroma".
 Also since we do not reuse the storage I removed the volume entry.
 
 
+## Bun via Docker Setup
+
+Optional: Pull the image with `docker pull oven/bun:latest`
+
+Setup an alias to use Bun from the current directory:
+
+MacOS:
+```bash
+alias bun="docker run --name "bun-temp-runner" --interactive --tty --rm -v $(pwd):/app -w /app oven/bun bun"
+```
+
+To make `host.docker.internal` available you need explicitly set a host entry.
+Linux:
+```bash
+alias bun="docker run --add-host=host.docker.internal:172.17.0.1 --name "bun-temp-runner" --interactive --tty --rm -v $(pwd):/app -w /app oven/bun bun"
+```
+
 # Running the Example
 - Ensure to have bun, docker and docker compose installed.
 - Run the chroma database as described above.

@@ -2,15 +2,16 @@ import { ChromaClient, Collection } from "chromadb";
 import {Ollama} from "ollama";
 
 const MY_COL_NAME = "my-collection";
-const OLLAMA_HOST_IP = "192.168.199.246";
+// const OLLAMA_HOST_IP = "192.168.199.246";
+const OLLAMA_HOST_IP = "host.docker.internal";
 const EMBEDDING_MODEL = "nomic-embed-text";
 const LLM_MODEL = "llama3:70b";
 const MAX_TOP_RESULTS = 5;
 
-const INPUT_SEARCH = "Where did Jens Nixdorf went to school?";
+const INPUT_SEARCH = "In which cities did Jens Nixdorf went to school?";
 
 const readyDatabase = async ():Promise<Collection> => {
-  const client = new ChromaClient({ path: "localhost:8000",});
+  const client = new ChromaClient({ path: "host.docker.internal:8000",});
   const collection = await client.getCollection({name:MY_COL_NAME});
   console.log("ChromaDB collection is ready.");
   return collection;

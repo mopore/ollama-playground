@@ -4,14 +4,15 @@ import {Ollama} from "ollama";
 
 const MY_COL_NAME = "my-collection";
 const EMBEDDING_MODEL = "nomic-embed-text";
-const OLLAMA_HOST_IP = "192.168.199.246";
+// const OLLAMA_HOST_IP = "192.168.199.246";
+const OLLAMA_HOST_IP = "host.docker.internal";
 
 const inputDocs: string[] = [
   "specific_input.txt",
 ] as const;
 
 const readyDatabase = async ():Promise<Collection> => {
-  const client = new ChromaClient({ path: "localhost:8000",});
+  const client = new ChromaClient({ path: "host.docker.internal:8000",});
   await client.deleteCollection({name:MY_COL_NAME});
   const collection = await client.getOrCreateCollection({name:MY_COL_NAME});
   console.log("ChromaDB collection is ready.");
