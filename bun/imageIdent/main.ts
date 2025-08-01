@@ -2,7 +2,7 @@ import {Ollama} from 'ollama';
 import imgb64 from 'image-to-base64';
 
 const imagePath = "./image0.png" as const;
-const ollama = new Ollama({host:"192.168.199.246"});
+const ollama = new Ollama({host:"192.168.199.246"});  // local IP of Mac Studio
 // const prompt = "Describe this image in one sentence.";
 const prompt = "Answer with 'YES' or 'NO' if an animal is present in the image.";
 const image = await imgb64(imagePath);
