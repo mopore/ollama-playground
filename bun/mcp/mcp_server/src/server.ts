@@ -133,7 +133,7 @@ const readJson = (req: IncomingMessage): Promise<any> => {
 }
 
 // ---- 3) Start HTTP server (Bun runs this just fine) ----
-const PORT = Number(process.env.MCP_PORT || 3000);
+const PORT = Number(process.env.MCP_PORT || 8080);
 
 const server = createServer(async (req, res) => {
     const url = new URL(req.url ?? "/", `http://${req.headers.host}`);
