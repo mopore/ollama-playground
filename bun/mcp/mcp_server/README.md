@@ -1,7 +1,7 @@
 Example for an MCP Server running with HTTP Streaming
 =====================================================
 
-To run with bun set an alias
+To run with Bun from the Bun Docker image set an alias
 ```shell
 alias bun="docker run --name bun-temp-runner --interactive --tty --rm --network host -v $(pwd):/app -w /app oven/bun bun"
 ```
@@ -18,7 +18,7 @@ docker container stop bun-temp-runner
 
 To test the tool call:
 ```shell
-curl -sS http://localhost:3000/mcp \
+curl -sS http://localhost:8080/mcp \
     -H 'Content-Type: application/json' \
     -H 'Accept: application/json, text/event-stream' \
     -d '{
@@ -33,7 +33,7 @@ curl -sS http://localhost:3000/mcp \
 ```
 List available tools:
 ```
-curl -sS http://localhost:3000/mcp \
+curl -sS http://localhost:8080/mcp \
     -H 'Content-Type: application/json' \
     -H 'Accept: application/json, text/event-stream' \
     -d '{
@@ -43,6 +43,13 @@ curl -sS http://localhost:3000/mcp \
         "params":{}
     }'
 ```
+
+Run the server from a Docker container
+```shell
+ docker build -t mcp-server .
+ docker run --rm -p 8080:8080 mcp-server
+```
+
 
 *** Note *** When using n8n running inside a container you have to give an external IP for localhost.
 
