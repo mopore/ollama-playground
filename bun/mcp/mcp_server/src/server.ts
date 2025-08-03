@@ -135,16 +135,16 @@ const readJson = (req: IncomingMessage): Promise<any> => {
 // ---- 3) Start HTTP server (Bun runs this just fine) ----
 const PORT = Number(process.env.MCP_PORT || 8080);
 
+const isMcpEndpoint = (p: string) => p === "/mcp" || p === "/mcp/";
+
 const server = createServer(async (req, res) => {
     const url = new URL(req.url ?? "/", `http://${req.headers.host}`);
-    if (url.pathname !== "/mcp"){
-        return notFound(res);
-    }
+    if (!isMcpEndpoint(url.pathname)) return notFound(res);
 
     if (req.method === "POST") {
         await handleMcpPost(req, res);
     } else if (req.method === "GET" || req.method === "DELETE") {
-        // No SSE or session termination in stateless mode
+        // Stateless mode: explicitly say not allowed (per spec this is OK)
         methodNotAllowed(res);
     } else {
         methodNotAllowed(res);
