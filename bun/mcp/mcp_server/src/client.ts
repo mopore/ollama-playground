@@ -10,7 +10,7 @@ const InputSchema = z.object({
 type Input = z.infer<typeof InputSchema>;
 
 /** Endpoint of your MCP server (defaults to your sample’s port/path) */
-const MCP_URL = new URL(process.env.MCP_URL || "http://192.168.199.246:8080/mcp/");
+const MCP_URL = new URL(process.env.MCP_URL || "http://192.168.199.246:8080/mcp");
 
 /** Minimal CLI parsing: supports `client.ts 3 5` or `client.ts --a 3 --b 5` */
 const parseArgs = (argv: string[]): Input => {
