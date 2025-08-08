@@ -1,0 +1,8 @@
+{
+    "files.exclude": {
+        "dist": true,
+        "node_modules": true,
+        "secrets": true
+    },
+    "cmake.configureOnOpen": false
+}

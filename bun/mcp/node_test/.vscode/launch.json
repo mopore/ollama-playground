@@ -1,0 +1,73 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            // Uncomment the following line if your need an interactive console (w/ input)
+            // "console": "integratedTerminal",
+            "name": "Launch Main",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/src/App.ts",
+            "console": "integratedTerminal",
+            "args": [
+                "I've been set from .vscode/launch.json!"
+            ],
+            "env": {
+                "LOG_SETUP":"dev",
+            },
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ],
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Server",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/src/Server.ts",
+            "console": "integratedTerminal",
+            "env": {
+                "LOG_SETUP":"dev",
+            },
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ],
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Client",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/src/Server.ts",
+            "console": "integratedTerminal",
+            "env": {
+                "LOG_SETUP":"dev",
+            },
+            "outFiles": [
+                "${workspaceFolder}/**/*.js"
+            ],
+            "resolveSourceMapLocations": [
+                "${workspaceFolder}/**",
+                "!**/node_modules/**"
+            ]
+        }
+    ],
+}

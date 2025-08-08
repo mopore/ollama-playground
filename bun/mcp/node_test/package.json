@@ -1,0 +1,47 @@
+{
+  "name": "jni-ts-template",
+  "version": "2.1.0",
+  "description": "Template to start with a fresh TypeScript project.",
+  "main": "App.ts",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mopore/jni-ts-template"
+  },
+  "scripts": {
+    "test_core": "rm -rf ./dist && tsc -b && npx eslint . && LOG_SETUP=prod mocha dist/test-core/**/*.js --recursive --exit",
+    "test_all": "rm -rf ./dist && tsc -b && npx eslint . && LOG_SETUP=prod mocha dist/test-core/**/*.js --recursive --exit && LOG_SETUP=prod mocha --timeout 20000 dist/test-integration/**/*.js --recursive --exit",
+    "build": "rm -rf ./dist && tsc -b && npx eslint .",
+    "build-docker-image": "docker image build -t jni-ts-template .",
+    "start": "LOG_SETUP=dev node dist/src/App.js",
+    "run-container": "docker container run --rm jni-ts-template \"I am set in package.json\""
+  },
+  "keywords": [
+    "template",
+    "TypeScript"
+  ],
+  "author": "jni@mopore.org",
+  "license": "ISC",
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.0",
+    "@eslint/js": "^9.21.0",
+    "@types/chai": "^5.0.1",
+    "@types/chai-as-promised": "^8.0.1",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.13.5",
+    "@typescript-eslint/eslint-plugin": "^8.24.1",
+    "@typescript-eslint/parser": "^8.24.1",
+    "chai": "^5.2.0",
+    "chai-as-promised": "^8.0.1",
+    "eslint": "^9.21.0",
+    "mocha": "^11.1.0",
+    "neo4j-driver": "^5.28.1",
+    "testcontainers": "^10.18.0",
+    "ts-sinon": "^2.0.2",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "winston": "^3.17.0"
+  }
+}
