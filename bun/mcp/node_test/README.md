@@ -1,14 +1,3 @@
-Remember to run
-
-```shell
-pnpm install zod@^3
-pnpm install @modelcontextprotocol/sdk
-```
-
-
-
-
-
 
 ```
     ███        ▄████████   ▄▄▄▄███▄▄▄▄      ▄███████▄  ▄█          ▄████████     ███        ▄████████ 

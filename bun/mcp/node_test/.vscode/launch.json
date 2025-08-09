@@ -56,7 +56,7 @@
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}/src/Server.ts",
+            "program": "${workspaceFolder}/src/Client.ts",
             "console": "integratedTerminal",
             "env": {
                 "LOG_SETUP":"dev",

@@ -4,16 +4,22 @@ import { z } from "zod";
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import { sleepAsync } from "./shared/SharedFunctions.js";
 
 
-const buildServer = () => {
-  const server = new McpServer({ name: "minimal-streamable-http", version: "1.0.0" });
+const buildServer = (): McpServer => {
+  const server = new McpServer(
+    {
+      name: "minimal-streamable-http",
+      version: "1.0.0"
+    }
+  );
 
   server.registerResource(
     "hello",
     "local://hello",
     { title: "Hello", description: "A single text resource", mimeType: "text/plain" },
-    async (uri) => ({
+    (uri) => ({
       contents: [{ uri: uri.href, text: "hello world" }],
     })
   );
@@ -27,6 +33,7 @@ const buildServer = () => {
     },
     async ({ a, b }) => {
       const sum = a + b;
+      await sleepAsync(100);
       console.log(`[MCP] tool add_numbers called with a=${a} b=${b} -> ${sum}`);
       return { content: [{ type: "text", text: String(sum) }] };
     }
@@ -46,11 +53,11 @@ const logReq = (req: express.Request) => {
   const sid = (req.headers["mcp-session-id"] as string) || "-";
   const acc = req.headers["accept"] || "-";
   const ct = req.headers["content-type"] || "-";
-  const m = (req.body && (req.body.method as string)) || "-";
-  const id = (req.body && (req.body.id as number | string)) ?? "-";
+  // const m = (req.body && (req.body.method as string)) || "-";
+  // const id = (req.body && (req.body.id as number | string)) ?? "-";
   console.log(
     `[HTTP] ${req.method} ${req.originalUrl} ` +
-      `sid=${sid} accept="${acc}" content-type="${ct}" jsonrpc.method=${m} id=${id}`
+    `sid=${sid} accept="${acc}" content-type="${ct}"`
   );
 };
 
@@ -66,7 +73,7 @@ const handlePost: express.RequestHandler = async (req, res) => {
   try {
     let transport: StreamableHTTPServerTransport | undefined;
 
-    if (sessionId && transports[sessionId]) {
+    if (sessionId) {
       transport = transports[sessionId];
     } else if (!sessionId && isInit) {
       console.log("[MCP] creating transport for new session…");
@@ -74,7 +81,10 @@ const handlePost: express.RequestHandler = async (req, res) => {
         sessionIdGenerator: () => randomUUID(),
         onsessioninitialized: (sid) => {
           console.log(`[MCP] session initialized: ${sid}`);
-          transports[sid] = transport!;
+          if (transport === undefined) {
+            throw new Error(`[MCP] transport is undefined for session: ${sid}`);
+          }
+          transports[sid] = transport;
         },
       });
 
@@ -109,7 +119,7 @@ const handlePost: express.RequestHandler = async (req, res) => {
 const handleGetOrDelete: express.RequestHandler = async (req, res) => {
   logReq(req);
   const sessionId = (req.headers["mcp-session-id"] as string | undefined) ?? undefined;
-  if (!sessionId || !transports[sessionId]) {
+  if (!sessionId) {
     console.warn("[MCP] GET/DELETE with invalid or missing session ID");
     res.status(400).send("Invalid or missing session ID");
     return;

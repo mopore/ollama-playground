@@ -10,23 +10,10 @@ const InputSchema = z.object({
 type Input = z.infer<typeof InputSchema>;
 
 /** Endpoint of your MCP server (defaults to your sample’s port/path) */
-const MCP_URL = new URL(process.env.MCP_URL || "http://192.168.199.246:8080/mcp");
-
-/** Minimal CLI parsing: supports `client.ts 3 5` or `client.ts --a 3 --b 5` */
-const parseArgs = (argv: string[]): Input => {
-    const out: Record<string, unknown> = {};
-    for (let i = 0; i < argv.length; i++) {
-        const t = argv[i];
-        if (t === "--a") out.a = argv[++i];
-            else if (t === "--b") out.b = argv[++i];
-                else if (out.a === undefined) out.a = t;
-                    else if (out.b === undefined) out.b = t;
-    }
-    return InputSchema.parse({ a: out.a, b: out.b });
-};
+const MCP_URL = new URL("http://localhost:8080/mcp");
 
 const main = async () => {
-    const { a, b } = parseArgs(process.argv.slice(2));
+    const { a, b }:Input = { a: 5, b: 3 };
 
     const client = new Client({ name: "bun-streamable-http-client", version: "1.0.0" });
     const transport = new StreamableHTTPClientTransport(MCP_URL);
@@ -43,6 +30,8 @@ const main = async () => {
 
     const text = result?.content?.find((c) => c.type === "text")?.text ?? "";
     console.log(`Result: ${text}`);
+    client.close();
+    console.log("Client closed.");
 };
 
 main().catch((err) => {
