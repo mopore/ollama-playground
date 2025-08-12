@@ -31,9 +31,9 @@ COPY --from=build /app/bunfig.toml* /app/bunfig.toml
 
 EXPOSE 8080
 
-# Simple health endpoint check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s \
-  CMD wget -qO- http://127.0.0.1:8080/health || exit 1
+# # Simple health endpoint check
+# HEALTHCHECK --interval=30s --timeout=3s --start-period=5s \
+#   CMD wget -qO- http://127.0.0.1:8080/health || exit 1
 
 # Run the TypeScript entry with Bun (Bun transpiles TS at runtime)
-CMD ["bun", "run", "src/server.ts"]
+CMD ["bun", "run", "src/server2.ts"]
