@@ -46,8 +46,8 @@ curl -sS http://localhost:8080/mcp \
 
 Run the server from a Docker container
 ```shell
- docker build -t mcp-server .
- docker run --rm -p 8080:8080 mcp-server
+docker build -t mcp-server-example-add-numbers .
+docker compose up -d
 ```
 
 
