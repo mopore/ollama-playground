@@ -4,9 +4,11 @@ import { extractAddNumbersInput } from "./parseArgs";
 import { ADD_NUMBERS_TOOL, addNumbersImpl, createInitialMessage } from "./tool_add_numbers";
 
 
-const HOST = "http://10.200.0.2:11434";
-// const HOST = "http://localhost:11434";
-
+// To run with a "custom" config, you can set the environment variables:
+// HOST=http://localhost:11434 OLLAMA_MODEL=gpt-oss:20b bun run main.ts 100 200
+//
+//
+const HOST = process.env.HOST || "http://localhost:11434";
 const MODEL = process.env.OLLAMA_MODEL || "gpt-oss:20b"; // model must support tools
 
 
