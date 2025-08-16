@@ -1,5 +1,22 @@
+import { z } from "zod";
+import { zodToJsonSchema } from "zod-to-json-schema";
 import type { Message, Tool } from "ollama";
-import type { AddNumbersInput, AddNumbersOutput } from "./types";
+
+
+export const AddNumbersInputSchema = z.object({
+	a: z.coerce.number().describe("The first number to add"),
+	b: z.coerce.number().describe("The second number to add"),
+});
+
+export type AddNumbersInput = z.infer<typeof AddNumbersInputSchema>;
+
+export const AddNumbersOutputSchema = z.object({
+	input: AddNumbersInputSchema,
+	output: z.coerce.number().describe("The sum of a and b"),
+});
+
+export type AddNumbersOutput = z.infer<typeof AddNumbersOutputSchema>;
+
 
 export const ADD_NUMBERS_TOOL: Tool = {
 	type: "function",
@@ -17,13 +34,22 @@ export const ADD_NUMBERS_TOOL: Tool = {
 	},
 }
 
-
 export const createInitialMessage = (input: AddNumbersInput): Message[] => {
+	const respFormat = zodToJsonSchema(AddNumbersOutputSchema, {
+		name: "ResponseFormat",
+	});
+
 	return [
 		{
 			role: "system" as const,
 			content:
-				"You are a helpful assistant. Prefer calling tools for arithmetic instead of doing math in your head.",
+				"You are a helpful assistant.\n" +
+				"Prefer calling tools for any requested actions and knowledge requests.\n" +
+				"Provide your response in JSON.\n" +
+				"Use the following JSON schema definition:\n" +
+				"```json\n" +
+				`${JSON.stringify(respFormat, null, 2)}\n` +
+				"```n"
 		},
 		{
 			role: "user" as const,
@@ -41,4 +67,3 @@ export const addNumbersImpl = (i: AddNumbersInput): AddNumbersOutput => {
 		output: result,
 	};
 };
-
