@@ -1,5 +1,5 @@
 import { extractAddNumbersInput } from "./parseArgs";
-import { OllamaHandler } from "./ollama_handler";
+import { AddNumbersOllamaToolCall } from "./AddNumbersOllamaToolCall";
 
 
 // To run with a "custom" config, you can set the environment variables:
@@ -11,12 +11,18 @@ const MODEL = process.env.OLLAMA_MODEL || "gpt-oss:20b"; // model must support t
 
 
 const main = async () => {
+	console.log("Main: Setting up Ollama tool call...");
+
+	const toolCall = new AddNumbersOllamaToolCall();
+	toolCall.setOllamaConfig({
+		host: HOST,
+		model: MODEL,
+	});
+
 	const addNumbersInput = extractAddNumbersInput(process.argv.slice(2));
+	const o = await toolCall.execute(addNumbersInput);
 
-	const ollamaHandler = new OllamaHandler(HOST, MODEL);
-	const o = await ollamaHandler.callOllama(addNumbersInput);
-
-	const userOutput = `The sum of ${o.input.a} and ${o.input.b} is ${o.output}.`;
+	const userOutput = `Main: The sum of ${o.input.a} and ${o.input.b} is ${o.output}.`;
 	console.log(userOutput);
 };
 

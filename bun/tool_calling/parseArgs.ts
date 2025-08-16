@@ -1,4 +1,4 @@
-import { AddNumbersInputSchema, type AddNumbersInput } from "./types";
+import { AddNumbersInputSchema, type AddNumbersInput } from "./AddNumbersOllamaToolCall";
 
 export const extractAddNumbersInput = (argv: string[]): AddNumbersInput => {
 	const out: Record<string, unknown> = {};
