@@ -1,4 +1,4 @@
-import { Ollama, type Message } from "ollama";
+import { Ollama, type Message, type Tool } from "ollama";
 import type { ZodTypeAny } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
 import type { IOllamaToolCall } from "./IOllamaToolCall";
@@ -19,10 +19,17 @@ export class OllamaHandler {
       toolCall.toolOutputSchema,
     );
     console.log(`OllamaHandler: Requesting initial response...`);
+
+    const createdTool = createTool({
+      name: toolCall.toolName,
+      description: toolCall.task,
+      input: toolCall.toolInputSchema,
+      output: toolCall.toolOutputSchema,
+    });
     let response = await ollama.chat({
       model: this.model,
       messages,
-      tools: [toolCall.ollamaTool],
+      tools: [createdTool],
     });
 
     const toolCallRequested = response.message.tool_calls !== undefined && 
@@ -75,26 +82,28 @@ export class OllamaHandler {
 }
 
 
-// /**
-//  * Create an Ollama Tool definition from Zod schema
-//  */
-// export const createTool = <I extends ZodTypeAny, O extends ZodTypeAny>(opts: {
-//   name: string;
-//   description: string;
-//   input: I;
-//   output: O;
-// }): Tool => {
-//   const inputSchema = zodToJsonSchema(opts.input, { name: `${opts.name}Input` });
-//   return {
-//     type: "function",
-//     function: {
-//       name: opts.name,
-//       description: opts.description,
-//       parameters: inputSchema,
-//     },
-//   };
-// };
-//
+/**
+ * Create an Ollama Tool definition from Zod schema
+ */
+export const createTool = <I extends ZodTypeAny, O extends ZodTypeAny>(opts: {
+  name: string;
+  description: string;
+  input: I;
+  output: O;
+}): Tool => {
+  const paramSchema = zodToJsonSchema(opts.input);
+  const parsedParamSchema = JSON.parse(JSON.stringify(paramSchema, null, 2));
+  // console.log(JSON.stringify(parsedParamSchema, null, 2));
+
+  return {
+    type: "function",
+    function: {
+      name: opts.name,
+      description: opts.description,
+      parameters: parsedParamSchema,
+    },
+  };
+};
 
 
 const createInitialMessage = <O extends ZodTypeAny>(

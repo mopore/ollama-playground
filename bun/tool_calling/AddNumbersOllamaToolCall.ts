@@ -1,5 +1,4 @@
 import { z } from "zod";
-import type { Tool } from "ollama";
 import type { ToolInput, ToolOutput } from "./types";
 import type { IOllamaToolCall } from "./IOllamaToolCall"; 
 import type { IOllamaConfig } from "./IOllamaConfig";
@@ -20,6 +19,7 @@ export type AddNumbersInput = ToolInput<typeof AddNumbersInputSchema>;
 
 export type AddNumbersOutput = ToolOutput<typeof AddNumbersOutputSchema>;
 
+
 export class AddNumbersOllamaToolCall implements IOllamaToolCall<typeof AddNumbersInputSchema, typeof AddNumbersOutputSchema> {
 
 	private h: OllamaHandler | undefined;
@@ -33,25 +33,6 @@ export class AddNumbersOllamaToolCall implements IOllamaToolCall<typeof AddNumbe
 	public readonly toolOutputSchema = AddNumbersOutputSchema;
 	public readonly toolName = "add_numbers";
 
-
-	get ollamaTool(): Tool{
-		return {
-			type: "function",
-			function: {
-				name: "add_numbers",
-				description: "Add two numbers and return the sum.",
-				parameters: {
-					type: "object",
-					properties: {
-						a: { type: "number", description: "The first number" },
-						b: { type: "number", description: "The second number" },
-					},
-					required: ["a", "b"],
-				},
-			},
-		};
-
-	}
 	get task(): string{
 		if (!this.i) {
 			throw new Error("Tool input not set. Please call setInput() first.");
