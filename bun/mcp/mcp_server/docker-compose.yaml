@@ -1,8 +1,0 @@
-services:
-  mcp-server-example-add-numbers:
-    container_name: mcp_server_example_add_numbers
-    # image: eclipse-mosquitto:latest
-    image: mcp-server-example-add-numbers
-    ports:
-      - 8080:8080
-    restart: unless-stopped 
