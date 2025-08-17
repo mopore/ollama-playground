@@ -1,13 +1,27 @@
-import { AddNumbersInputSchema, type AddNumbersInput } from "./AddNumbersOllamaToolCall";
+import { z } from "zod";
 
-export const extractAddNumbersInput = (argv: string[]): AddNumbersInput => {
-	const out: Record<string, unknown> = {};
-	for (let i = 0; i < argv.length; i++) {
-		const t = argv[i];
-		if (t === "--a") out.a = argv[++i];
-		else if (t === "--b") out.b = argv[++i];
-		else if (out.a === undefined) out.a = t;
-		else if (out.b === undefined) out.b = t;
-	}
-	return AddNumbersInputSchema.parse({ a: out.a, b: out.b });
+export const TaskInputSchema = z.object({
+  task: z.string().min(1, "Task cannot be empty"),
+});
+
+export type TaskInput = z.infer<typeof TaskInputSchema>;
+
+export const extractTaskInput = (argv: string[]): TaskInput => {
+  let task: string | undefined;
+
+  for (let i = 0; i < argv.length; i++) {
+    const t = argv[i];
+    if (t === "-t" || t === "--task") {
+      task = argv[++i];
+      break;
+    }
+  }
+
+  if (!task) {
+    throw new Error(
+      `Invalid usage.\n\nUsage:\n  programname -t "This is the text of the task"\n  programname --task "This is another text"`
+    );
+  }
+
+  return TaskInputSchema.parse({ task });
 };

@@ -1,15 +1,29 @@
-# tool_calling
+  ___  _ _                         _____           _ 
+ / _ \| | | __ _ _ __ ___   __ _  |_   _|__   ___ | |
+| | | | | |/ _` | '_ ` _ \ / _` |   | |/ _ \ / _ \| |
+| |_| | | | (_| | | | | | | (_| |   | | (_) | (_) | |
+ \___/|_|_|\__,_|_| |_| |_|\__,_|   |_|\___/ \___/|_|
+                                                     
+  ____      _ _ _             
+ / ___|__ _| | (_)_ __   __ _ 
+| |   / _` | | | | '_ \ / _` |
+| |__| (_| | | | | | | | (_| |
+ \____\__,_|_|_|_|_| |_|\__, |
+                        |___/ 
+
 
 To install dependencies:
-
-```bash
+```shell
 bun install
 ```
 
-To run:
-
-```bash
-bun run index.ts
+To test:
+```shell
+bun test
 ```
 
-This project was created using `bun init` in bun v1.2.19. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+To run:
+```shell
+bun run main.ts -t "Add 200 and 1"  # triggers add numbers tool
+bun run main.ts -t "Make a note 'Buy new coffee'"  # triggers make note tool
+```
