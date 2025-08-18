@@ -38,7 +38,7 @@ export class AddNumbersCoreTool implements ICoreTool<typeof AddNumbersInputSchem
 
 	executeTool(i: AddNumbersInput): Promise<AddNumbersOutput> {
 		const result = i.a + i.b;
-		console.log(`AddNumbersOllamaTool.executeTool: add_numbers(${i.a}, ${i.b}) = ${result}`);
+		console.log(`AddNumbersCoreTool.executeTool: add_numbers(${i.a}, ${i.b}) = ${result}`);
 		const output: AddNumbersOutput = {
 			input: i,
 			output: result,

@@ -39,12 +39,12 @@ export class MakeNoteCoreTool implements ICoreTool<typeof MakeNoteInputSchema, t
 	}
 
 	executeTool(i: MakeNoteInput): Promise<MakeNoteOutput> {
-		console.log(`MakeNoteOllamaTool.executeTool: make a note with "${i.content}"`);
+		console.log(`MakeNoteCoreTool.executeTool: make a note with "${i.content}"`);
 
 		const desktopPath = path.join(os.homedir(), "Desktop", "make_note_tool.txt");
 		fs.writeFileSync(desktopPath, i.content, "utf8");
 
-		console.log(`MakeNoteOllamaTool.executeTool: Note saved to ${desktopPath}`);
+		console.log(`MakeNoteCoreTool.executeTool: Note saved to ${desktopPath}`);
 
 		const output: MakeNoteOutput = {
 			input: i,
