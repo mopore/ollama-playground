@@ -11,6 +11,8 @@
  \____\__,_|_|_|_|_| |_|\__, |   |_|   |_|  |_|\____|_|    
                         |___/                              
 
+## Overview
+
 This project is based on "tool_calling" (sister directory) and a first
 MCP attempt.
 
@@ -21,6 +23,7 @@ as a docker container.
 The server can be tested with CURL commands which are proviced here:
 [Curl commands to test MCP server](./Curl_statements_to_test_server.md)
 
+## Setup
 
 To install dependencies:
 ```shell
