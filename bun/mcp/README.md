@@ -60,3 +60,10 @@ docker buildx build -t mcp-server-example .
 docker compose up -d
 ```
 
+## Miscellaneous
+This project comes with a `src/.editorconfig` file:
+```
+[*.ts]
+indent_style = tab
+indent_size = 4
+```
