@@ -62,10 +62,10 @@ export class MakeNoteCoreTool implements ICoreTool<typeof MakeNoteInputSchema, t
 				inputSchema: MakeNoteInputSchema.shape,
 			},
 			async (i: MakeNoteInput) => {
-				console.log("Entering MCP context");
+				console.log("MCP-Callback: Entering MCP context");
 				const o: MakeNoteOutput = await this.executeTool(i);
 				const oJson = JSON.stringify(o, null, 2);
-				console.log("Leaving MCP context");
+				console.log("MCP-Callback: Leaving MCP context");
 				return { 
 					content: [{ type: "text", text: oJson }],
 					"structuredContent": JSON.parse(oJson)

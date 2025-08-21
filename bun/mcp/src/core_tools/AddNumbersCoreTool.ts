@@ -63,10 +63,10 @@ export class AddNumbersCoreTool implements ICoreTool<typeof AddNumbersInputSchem
 				inputSchema: AddNumbersInputSchema.shape,
 			},
 			async (i: AddNumbersInput) => {
-				console.log("Entering MCP context");
+				console.log("MCP-Callback: Entering MCP context");
 				const o: AddNumbersOutput = await this.executeTool(i);
 				const oJson = JSON.stringify(o, null, 2);
-				console.log("Leaving MCP context");
+				console.log("MCP-Callback: Leaving MCP context");
 				return { 
 					content: [{ type: "text", text: oJson }],
 					"structuredContent": JSON.parse(oJson)
