@@ -13,10 +13,11 @@
 
 ## Overview
 
-This project is based on "tool_calling" (sister directory) and a first
-MCP attempt.
+This project implements examples of an AI agent with two approaches.
+1. "tool_calling" via Ollama Tool Calling feature
+2. An MCP-based approach with a host running MCP Clients and a MCP Server.
 
-This client will only work with a running MCP server that can be called.
+The host will only work with a running MCP server that can be called.
 The server can be started directly via the server.ts script or can be run
 as a docker container.
 
@@ -47,11 +48,11 @@ To run the MCP server:
 bun run src/server/main.ts
 ```
 
-To call via MCP client:
+To call via MCP client you have to run the host:
 ```shell
-bun run src/client/main.ts -t "Add 200 and 1"  # triggers add numbers tool
+bun run src/host/main.ts -t "Add 200 and 1"  # triggers add numbers tool
 # or
-# bun run src/client/main.ts -t "Make a note 'Buy new coffee'"  # triggers make note tool
+# bun run src/host/main.ts -t "Make a note 'Buy new coffee'"  # triggers make note tool
 ```
 
 Docker setup

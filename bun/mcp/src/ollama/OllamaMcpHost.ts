@@ -1,15 +1,17 @@
 import { Ollama, type Message, type Tool } from "ollama";
 import type { ZodTypeAny } from "zod";
 import zodToJsonSchema from "zod-to-json-schema";
-import type { IOllamaConfig } from "./IOllamaConfig";
 import type { ICoreTool } from "../core_tools/ICoreTool";
+import { Client } from "@modelcontextprotocol/sdk/client";
+import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
+import type { IOllamaMcpHostConfig } from "./IOllamaMcpHostConfig";
 
-export class OllamaHandler {
+export class OllamaMcpHost {
 
 	private readonly _tmap: Map<string, ICoreTool<ZodTypeAny, ZodTypeAny>> = new Map();
 
 	constructor(
-		private readonly _c: IOllamaConfig,
+		private readonly _c: IOllamaMcpHostConfig,
 	) {}
 
 	registerTools(toolsMap: Map<string, ICoreTool<ZodTypeAny, ZodTypeAny>>): void {
@@ -20,13 +22,13 @@ export class OllamaHandler {
 
 	async callOllama(taskDescription: string): Promise<string | undefined> {
 		let usedToolName: string | undefined;
-		const ollama = new Ollama({ host: this._c.host });
+		const ollama = new Ollama({ host: this._c.ollamaHost });
 		const messages = this.createInitialMessage(taskDescription);
 		const toolDefinitions = this.createToolDefinitions();
 
-		console.log(`OllamaHandler: Requesting initial response...`);
+		console.log(`OllamaMcpHost: Requesting initial response...`);
 		let response = await ollama.chat({
-			model: this._c.model,
+			model: this._c.ollamaModel,
 			messages,
 			tools: toolDefinitions,
 		});
@@ -37,19 +39,42 @@ export class OllamaHandler {
 			const toolCalls = response.message.tool_calls ?? [];
 			for (const call of toolCalls) {
 				const requestedToolName = call.function.name;
-				const toolCall = this._tmap.get(requestedToolName);
-				if (toolCall !== undefined) {
-					console.log(`OllamaHandler: Tool "${requestedToolName}" requested by model.`);
+				const coreTool = this._tmap.get(requestedToolName);
+				if (coreTool !== undefined) {
+					console.log(`OllamaMcpHost: Tool "${requestedToolName}" requested by model.`);
+
 					const inRaw = (call.function as any).arguments;
 					const inParsed = typeof inRaw === "string" ? JSON.parse(inRaw) : inRaw ?? {};
-					const toolInput = toolCall.toolInputSchema.parse(inParsed); // validate + coerce with zod
+					const toolInput = coreTool.toolInputSchema.parse(inParsed); // validate + coerce with zod
 
-					const toolOutput = await toolCall.executeTool(toolInput);
-					toolCall.storeOutput(toolOutput); // store the output for later retrieval
+					const client = new Client({ name: "bun-streamable-http-client", version: "1.0.0" });
+					const mcpServerHostUrl = new URL(this._c.mcpHost);
+					const transport = new StreamableHTTPClientTransport(mcpServerHostUrl);
 
-					console.log(`OllamaHandler: Passing tool response to model...`);
+					console.log(`OllamaMcpHost: Connecting to MCP server at ${mcpServerHostUrl.href} ...`);
+					await client.connect(transport);
+					console.log("OllamaMcpHost: Connected.");
+
+					console.log(`OllamaMcpHost: Calling tool "${coreTool.toolName}" via MCP.`);
+					const result = await client.callTool({
+						name: coreTool.toolName,
+						arguments: toolInput,
+					});
+
+					const structuredContent = result?.structuredContent;
+					if (structuredContent === undefined) {
+						throw new Error("No structured content in result");
+					}
+					const toolOutput = coreTool.toolOutputSchema.parse(structuredContent);
+					coreTool.storeOutput(toolOutput); // store the output for later retrieval
+
+					console.log(`OllamaMcpHost Result: ${JSON.stringify(toolOutput)}`);
+					client.close();
+					console.log("OllamaMcpHost: MCP Client closed.");
+
+					console.log(`OllamaMcpHost: Passing tool response to Ollama model...`);
 					const respAfterToolCall = await ollama.chat({
-						model: this._c.model,
+						model: this._c.ollamaModel,
 						// format: "json",
 						stream: false,
 						messages: [
@@ -57,7 +82,7 @@ export class OllamaHandler {
 							response.message,
 							{
 								role: "tool",
-								tool_name: toolCall.toolName,
+								tool_name: coreTool.toolName,
 								content: JSON.stringify(toolOutput),
 							},
 						],
@@ -69,7 +94,7 @@ export class OllamaHandler {
 					usedToolName = requestedToolName;
 				}
 				else {
-					throw new Error(`OllamaHandler: Unexpected tool call: ${call.function.name}`);
+					throw new Error(`OllamaMcpHost: Unexpected tool call: ${call.function.name}`);
 				}
 			}
 		}
