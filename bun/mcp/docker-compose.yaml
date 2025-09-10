@@ -10,4 +10,4 @@ services:
     restart: unless-stopped 
     volumes:
       # - "${PWD}:/home/bun/Desktop"
-      ~/container_stacks/mcp_server_example:/home/bun/Desktop
+      - ~/container_stacks/mcp_server_example:/home/bun/Desktop
