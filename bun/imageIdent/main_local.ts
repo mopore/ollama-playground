@@ -10,13 +10,11 @@ import imgb64 from 'image-to-base64';
 // const ollama = new Ollama({host:"11.200.0.2"});
 const ollama = new Ollama({host:"localhost"});
 
-// const ollama = new Ollama({host:"192.168.199.246"});
-// const prompt = "Describe this image in one sentence.";
 const prompt = "Answer with 'YES' or 'NO' if an animal is present in the image.";
 const image = await imgb64("./image0.png");
 // const image = await imgb64("./image1.jpg");
 
-console.log("Checkging if the image with the fly has an animal...");
+console.log("Checking if the image with the fly has an animal...");
 const output = await ollama.generate({
   prompt: prompt,
   model: "llava",
