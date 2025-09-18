@@ -11,7 +11,8 @@ import { allTools, ToolNames } from "../AllTools";
 //
 const c: IOllamaConfig = {
 	host: process.env.HOST || "http://localhost:11434",
-	model: process.env.OLLAMA_MODEL || "gpt-oss:20b", //
+	// model: process.env.OLLAMA_MODEL || "orieg/gemma3-tools:27b",
+	model: process.env.OLLAMA_MODEL || "gpt-oss:20b",
 };
 
 const printToolCallResult = (usedToolName: string | undefined) => {
