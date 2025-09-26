@@ -1,19 +1,14 @@
 import { Ollama, type Message, type Tool } from "ollama"
 
-// the function/tool implementation
-function add_numbers({ a, b }: { a: number; b: number }) {
-  const result = a + b;
-  console.log(`Adding ${a} and ${b} to get ${result}`);
-  return a + b
-}
-
-// --- tool definition for the model ---
+/*
+ * Tool "add_numbers" declaration for the LLM
+ */
 const toolsDefinition: Tool[] = [
   {
     type: "function",
     function: {
       name: "add_numbers",
-      description: "Add two numbers together.",
+      description: "Adds two numbers together and returns the sum.",
       parameters: {
         type: "object",
         properties: {
@@ -26,8 +21,24 @@ const toolsDefinition: Tool[] = [
   },
 ];
 
-const messages: Message[] = [
-  // Messages to start with...
+
+/*
+ * "add_numbers" implementation in Typescript adapting the declaration from above
+ */
+type AddNumbersInput = {
+  a: number;
+  b: number;
+};
+
+function add_numbers( input: AddNumbersInput) {
+  const result = input.a + input.b;
+  console.log(`Adding ${input.a} and ${input.b} to get ${result}`);
+  return result;
+}
+
+
+let messagesForLLM: Message[] = [
+  // Initial messages...
   {
     role: "system",
     content:
@@ -39,23 +50,27 @@ const messages: Message[] = [
   },
 ];
 
+
 async function main() {
   const ollama = new Ollama();
 
   console.log("Making initial call...");
-  const first = await ollama.chat({
+  const firstResponse = await ollama.chat({
     model: "gpt-oss:20b",
-    messages,
+    messages: messagesForLLM,
     tools: toolsDefinition,
   });
 
-  const calls = first.message.tool_calls ?? [];
+  const calls = firstResponse.message.tool_calls ?? [];
   if (calls.length === 0) {
-    console.error("Model did not request any tool calls.");
+    console.error("Model did not request any wish for tool calls.");
     return;
   }
 
-  let followupMessages: Message[] = [...messages, first.message];
+  // We know the LLM wants a tool call!
+
+  // We store the first respone of the chat to manually keep the context
+  messagesForLLM = [...messagesForLLM, firstResponse.message];
 
   for (const call of calls) {
     const toolName = call.function.name;
@@ -71,8 +86,8 @@ async function main() {
     const result = add_numbers(args);
     console.log(`Executed ${toolName}(${args.a}, ${args.b}) = ${result}`);
 
-    followupMessages = [
-      ...followupMessages,
+    messagesForLLM = [
+      ...messagesForLLM,
       {
         role: "tool",
         tool_name: "add_numbers",
@@ -82,12 +97,12 @@ async function main() {
   }
 
   console.log("Sending tool call result back to model");
-  const final = await ollama.chat({
+  const finalResponse = await ollama.chat({
     model: "gpt-oss:20b",
-    messages: followupMessages,
+    messages: messagesForLLM,
   });
 
-  console.log("\nFinal model output:\n", final.message.content);
+  console.log(`Final model output:"${finalResponse.message.content}"`);
 }
 
 main().catch((e) => {

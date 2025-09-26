@@ -11,8 +11,8 @@ import imgb64 from 'image-to-base64';
 const ollama = new Ollama({host:"localhost"});
 
 const prompt = "Answer with 'YES' or 'NO' if an animal is present in the image.";
-const image = await imgb64("./image0.png");
-// const image = await imgb64("./image1.jpg");
+// const image = await imgb64("./image0.png");
+const image = await imgb64("./image1.jpg");
 
 console.log("Checking if the image with the fly has an animal...");
 const output = await ollama.generate({
