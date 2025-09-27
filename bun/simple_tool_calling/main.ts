@@ -51,7 +51,7 @@ let messagesForLLM: Message[] = [
 ];
 
 
-async function main() {
+const main = async () => {
   const ollama = new Ollama();
 
   console.log("Making initial call...");
@@ -105,7 +105,7 @@ async function main() {
   console.log(`Final model output:"${finalResponse.message.content}"`);
 }
 
-main().catch((e) => {
+await main().catch((e) => {
   console.error(e);
   process.exit(1);
 });
