@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "ollama": "^0.5.18",
-    "openai": "^5.23.1"
+    "openai": "^5.23.1",
+    "zod": "^3",
+    "zod-to-json-schema": "^3.24.6"
   }
 }
