@@ -22,6 +22,7 @@ type AddNumbersOutput = ToolOutput<typeof AddNumbersOutputSchema>;
 
 const paramSchema = zodToJsonSchema(AddNumbersInputSchema);
 const parsedParamSchema = JSON.parse(JSON.stringify(paramSchema, null, 2));
+
 /*
  * Tool "add_numbers" declaration for the LLM
  */
@@ -35,7 +36,6 @@ const toolsDefinition: ChatCompletionTool[] = [
     },
   },
 ];
-
 
 const add_numbers = (i: AddNumbersInput): Promise<AddNumbersOutput> => {
   const result = i.a + i.b;

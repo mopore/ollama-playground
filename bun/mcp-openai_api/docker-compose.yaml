@@ -1,0 +1,13 @@
+services:
+  mcp-server-example:
+    container_name: mcp_server_example
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mcp-server-example
+    ports:
+      - 8080:8080
+    restart: unless-stopped 
+    volumes:
+      # - "${PWD}:/home/bun/Desktop"
+      - ~/container_stacks/mcp_server_example:/home/bun/Desktop
